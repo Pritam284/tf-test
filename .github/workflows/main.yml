@@ -59,12 +59,14 @@ jobs:
         if: ${{ github.event.inputs.environment == 'Stage '}} || ${{ github.event.inputs.environment == 'stage '}}
         run: |
           cd ${{ github.workspace }}/environments/stage
+          pwd
           terraform init
           terraform validate
       - name: build stage
         if: ${{ github.event.inputs.environment == 'production '}} || ${{ github.event.inputs.environment == 'Production '}}
         run: |
-          cd ${{ github.workspace }}/environments/production
+          pwd
+          cd ${{ github.workspace }}/environments/production/
           terraform init
           terraform validate
 
