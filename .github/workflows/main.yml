@@ -49,6 +49,7 @@ jobs:
           unzip terraform.zip
           sudo mv terraform /usr/local/bin/
           terraform --version
+          ls -R ${{ github.workspace }}
 
   build:
     runs-on: ubuntu-latest
