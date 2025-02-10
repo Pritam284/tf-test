@@ -58,8 +58,8 @@ jobs:
       - name: build stage
         if: ${{ github.event.inputs.environment == 'Stage '}} || ${{ github.event.inputs.environment == 'stage '}}
         run: |
-          cd ${{ github.workspace }}/environments/stage
           pwd
+          cd ${{ github.workspace }}/environments/stage          
           terraform init
           terraform validate
       - name: build stage
