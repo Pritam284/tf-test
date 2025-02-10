@@ -36,10 +36,10 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws_access_key_id: ${{ github.event.inputs.aws_access_key_id }}
-          aws_secret_access_key_id: ${{ github.event.inputs.aws_secret_access_key_id }}
-          aws_session_token: ${{ github.event.inputs.aws_session_token }}
-          region: ${{ github.event.inputs.aws_region }}
+          aws-access-key-id: ${{ github.event.inputs.aws_access_key_id }}
+          aws-secret-access-key: ${{ github.event.inputs.aws_secret_access_key_id }}
+          aws-session-token: ${{ github.event.inputs.aws_session_token }}
+          aws-region: ${{ github.event.inputs.aws_region }}
       
       - name: Install Pre Requisites
         run: |
