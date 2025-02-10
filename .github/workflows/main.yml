@@ -34,7 +34,7 @@ jobs:
     
 
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credential@v1
+        uses: aws-actions/configure-aws-credentials@v1
         with:
           aws_access_key_id: ${{ github.event.inputs.aws_access_key_id }}
           aws_secret_access_key_id: ${{ github.event.inputs.aws_secret_access_key_id }}
