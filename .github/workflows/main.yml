@@ -1,0 +1,86 @@
+name: Deploy Pipeline
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Selection Stage or Production as Input'
+        required: true
+        type: string
+      aws_access_key_id:
+        description: 'Aws access'
+        required: true
+        type: string
+      aws_secret_access_key_id:
+        description: 'Aws Secret'
+        required: true
+        type: string
+      aws_session_token:
+        description: 'Aws Session Token'
+        required: false
+        type: string
+      aws_region:
+        description: 'AWS Region'
+        required: true
+        type: string
+
+
+jobs:
+  pre_run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+    
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credential@v1
+        with:
+          aws_access_key_id: ${{ github.event.inputs.aws_access_key_id }}
+          aws_secret_access_key_id: ${{ github.event.inputs.aws_secret_access_key_id }}
+          aws_session_token: ${{ github.event.inputs.aws_session_token }}
+          region: ${{ github.event.inputs.aws_region }}
+      
+      - name: Install Pre Requisites
+        run: |
+          aws sts get-caller-identity 
+
+  build:
+    runs-on: ubuntu-latest
+    needs: pre_run
+    steps:
+      - name: build stage
+        if: ${{ github.event.inputs.environment == 'Stage '}} || ${{ github.event.inputs.environment == 'stage '}}
+        run: |
+          cd ${{ github.workspace }}/environments/stage
+          terraform init
+          terraform validate
+      - name: build stage
+        if: ${{ github.event.inputs.environment == 'production '}} || ${{ github.event.inputs.environment == 'Production '}}
+        run: |
+          cd ${{ github.workspace }}/environments/production
+          terraform init
+          terraform validate
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: 
+     - pre_run
+     - build
+    steps:
+      - name: deploy stage
+        if: ${{ github.event.inputs.environment == 'Stage '}} || ${{ github.event.inputs.environment == 'stage '}}
+        run: |
+          terraform plan -out=tfplan
+          terraform apply -auto-approve tfplan
+
+      - name: deploy production
+        if: ${{ github.event.inputs.environment == 'production '}} || ${{ github.event.inputs.environment == 'Production '}}
+        run: |
+          terraform plan -out=tfplan
+          terraform apply -auto-approve tfplan    
+
+        
+    
+
+
